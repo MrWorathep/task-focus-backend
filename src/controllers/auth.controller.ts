@@ -7,6 +7,12 @@ const supabase = createClient(env.SUPABASE_URL!, env.SUPABASE_ANON_KEY!);
 export async function register(req: Request, res: Response) {
   const { email, password, username } = req.body;
 
+  if (!username || !email || !password) {
+    return res.status(400).json({
+      message: "กรุณากรอกข้อมูลให้ครบถ้วน",
+    });
+  }
+
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
