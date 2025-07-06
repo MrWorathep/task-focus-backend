@@ -1,42 +1,37 @@
-﻿import { pool } from "@/db/pool";
-import bcrypt from "bcryptjs";
+﻿import { supabase } from "../db/pool";
 
 export interface UserRow {
-  id: number;
-  username: string;
+  id: string;
   email: string;
-  password_hash: string;
+  username?: string;
+  created_at?: string;
 }
 
-export async function findByEmail(email: string) {
-  const [rows] = await pool.query("SELECT * FROM users WHERE email = ?", [
-    email,
-  ]);
-  return (rows as UserRow[])[0] || null;
+export async function findByEmail(email: string): Promise<UserRow | null> {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("email", email)
+    .single();
+
+  if (error) return null;
+  return data;
 }
 
 export async function createUser(
   username: string,
-  email: string,
-  password: string
-) {
-  const hash = await bcrypt.hash(password, 10);
+  email: string
+): Promise<string | null> {
+  const { data, error } = await supabase
+    .from("profiles")
+    .insert([{ username, email }])
+    .select("id")
+    .single();
 
-  const [result] = await pool.query(
-    "INSERT INTO users(username,email,password_hash) VALUES (?,?,?)",
-    [username, email, hash]
-  );
+  if (error) {
+    console.error("createUser error:", error.message);
+    return null;
+  }
 
-  const insertId = (result as any).insertId as number;
-
-  // ตั้งเวลาเพื่อลบผู้ใช้หลังจาก 10 นาที
-  setTimeout(async () => {
-    try {
-      await pool.query(`DELETE FROM users WHERE id = ?`, [insertId]);
-    } catch (err) {
-      console.error("ลบข้อมูล user ผิดพลาด", err);
-    }
-  }, 10 * 60 * 1000);
-
-  return insertId;
+  return data.id;
 }
