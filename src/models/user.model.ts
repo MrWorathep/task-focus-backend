@@ -3,8 +3,8 @@
 export interface UserRow {
   id: string;
   email: string;
-  username?: string;
-  created_at?: string;
+  username: string;
+  created_at: string;
 }
 
 export async function findByEmail(email: string): Promise<UserRow | null> {
