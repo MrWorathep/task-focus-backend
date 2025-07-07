@@ -1,8 +1,7 @@
 ﻿import express from "express";
 import cors from "cors";
-import { env } from "./config/env";
 import authRoutes from "./routes/auth.routes";
-
+import { VercelRequest, VercelResponse } from "@vercel/node";
 const app = express();
 
 app.use(cors());
@@ -10,4 +9,6 @@ app.use(express.json());
 
 app.use("/taskfocus/auth", authRoutes);
 
-export default app;
+export default (req: VercelRequest, res: VercelResponse) => {
+  app(req, res);
+};

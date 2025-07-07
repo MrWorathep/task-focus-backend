@@ -21,17 +21,19 @@ export async function register(req: Request, res: Response) {
     },
   });
 
-  if (error) {
-    return res.status(400).json({ message: error.message });
+  if (error || !data?.user) {
+    return res
+      .status(400)
+      .json({ message: error?.message || "สมัครไม่สำเร็จ" });
   }
 
   res.status(201).json({
     message: "สมัครสมาชิกสำเร็จ",
     data: {
       user: {
-        id: data.user?.id,
-        email: data.user?.email,
-        username: data.user?.user_metadata?.username,
+        id: data.user.id,
+        email: data.user.email,
+        username: data.user.user_metadata?.username,
       },
     },
   });
@@ -45,9 +47,20 @@ export async function login(req: Request, res: Response) {
     password,
   });
 
-  if (error) {
-    return res.status(401).json({ message: error.message });
+  if (error || !data?.user) {
+    return res
+      .status(401)
+      .json({ message: error?.message || "เข้าสู่ระบบไม่สำเร็จ" });
   }
 
-  res.json({ message: "เข้าสู่ระบบสำเร็จ", data });
+  res.json({
+    message: "เข้าสู่ระบบสำเร็จ",
+    data: {
+      user: {
+        id: data.user.id,
+        email: data.user.email,
+        username: data.user.user_metadata?.username,
+      },
+    },
+  });
 }
