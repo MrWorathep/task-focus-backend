@@ -21,8 +21,24 @@ export async function register(req: Request, res: Response) {
       data: { username },
     },
   });
-  await createUser(username, email);
 
+  await createUser(username, email);
+  if (data?.user?.id) {
+    await createUser(username, email);
+
+    setTimeout(async () => {
+      const { error } = await supabase
+        .from("users")
+        .delete()
+        .eq("id", data.user!.id);
+
+      if (error) {
+        console.error("ลบผู้ใช้ไม่สำเร็จหลัง 5 นาที:", error.message);
+      } else {
+        console.log(`✅ ลบผู้ใช้ ${data.user!.id} สำเร็จ`);
+      }
+    }, 5 * 60 * 1000);
+  }
   res.status(201).json({
     message: "สมัครสมาชิกสำเร็จ",
     data: {

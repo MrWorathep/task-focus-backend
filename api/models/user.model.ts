@@ -33,7 +33,7 @@ export async function createUser(
   }
 
   const { data, error } = await supabase
-    .from("profiles")
+    .from("users")
     .insert([{ username, email, created_at: new Date().toISOString() }])
     .select("id")
     .single();
