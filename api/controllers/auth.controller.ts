@@ -21,18 +21,14 @@ export async function register(req: Request, res: Response) {
       data: { username },
     },
   });
-
-  if (data?.user?.id) {
-    await createUser(username, email);
-  }
+  await createUser(username, email);
 
   res.status(201).json({
     message: "สมัครสมาชิกสำเร็จ",
     data: {
       user: {
-        id: data?.user?.id,
-        email: data?.user?.email,
-        username: data?.user?.user_metadata?.username,
+        email: email,
+        username: username,
       },
     },
   });
