@@ -22,9 +22,8 @@ export async function register(req: Request, res: Response) {
     },
   });
 
-  await createUser(username, email);
   if (data?.user?.id) {
-    await createUser(username, email);
+    await createUser(username, email, data.user.id);
 
     setTimeout(async () => {
       const { error } = await supabase
@@ -39,6 +38,7 @@ export async function register(req: Request, res: Response) {
       }
     }, 5 * 60 * 1000);
   }
+
   res.status(201).json({
     message: "สมัครสมาชิกสำเร็จ",
     data: {

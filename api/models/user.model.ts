@@ -9,7 +9,7 @@ export interface UserRow {
 
 export async function findByEmail(email: string): Promise<UserRow | null> {
   const { data, error } = await supabase
-    .from("profiles")
+    .from("users")
     .select("id, email, username, created_at")
     .eq("email", email)
     .single();
@@ -24,17 +24,19 @@ export async function findByEmail(email: string): Promise<UserRow | null> {
 
 export async function createUser(
   username: string,
-  email: string
+  email: string,
+  id: string
 ): Promise<string | null> {
-  const existing = await findByEmail(email);
-  if (existing) {
-    console.warn("createUser: email ซ้ำ");
-    return null;
-  }
-
   const { data, error } = await supabase
     .from("users")
-    .insert([{ username, email, created_at: new Date().toISOString() }])
+    .insert([
+      {
+        id,
+        username,
+        email,
+        created_at: new Date().toISOString(),
+      },
+    ])
     .select("id")
     .single();
 
@@ -43,12 +45,12 @@ export async function createUser(
     return null;
   }
 
-  return data.id;
+  return data?.id ?? null;
 }
 
 export async function findById(id: string): Promise<UserRow | null> {
   const { data, error } = await supabase
-    .from("profiles")
+    .from("users")
     .select("id, email, username, created_at")
     .eq("id", id)
     .single();
