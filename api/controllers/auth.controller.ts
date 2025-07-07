@@ -35,9 +35,6 @@ export async function register(req: Request, res: Response) {
         email: data.user.email,
         username: data.user.user_metadata?.username,
       },
-      session: {
-        access_token: data.session?.access_token,
-      },
     },
   });
 }
@@ -63,6 +60,9 @@ export async function login(req: Request, res: Response) {
         id: data.user.id,
         email: data.user.email,
         username: data.user.user_metadata?.username,
+      },
+      session: {
+        access_token: data.session?.access_token,
       },
     },
   });
