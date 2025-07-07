@@ -1,6 +1,7 @@
 ﻿import { Request, Response } from "express";
 import { createClient } from "@supabase/supabase-js";
 import { env } from "../config/env";
+import { createUser } from "@/models/user.model";
 
 const supabase = createClient(env.SUPABASE_URL!, env.SUPABASE_ANON_KEY!);
 
@@ -20,6 +21,10 @@ export async function register(req: Request, res: Response) {
       data: { username },
     },
   });
+
+  if (data?.user?.id) {
+    await createUser(username, email);
+  }
 
   res.status(201).json({
     message: "สมัครสมาชิกสำเร็จ",
