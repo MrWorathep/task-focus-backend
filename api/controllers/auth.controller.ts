@@ -13,7 +13,7 @@ export async function register(req: Request, res: Response) {
     });
   }
 
-  const { data, error } = await supabase.auth.signUp({
+  const { data } = await supabase.auth.signUp({
     email,
     password,
     options: {
@@ -21,19 +21,13 @@ export async function register(req: Request, res: Response) {
     },
   });
 
-  if (error || !data?.user) {
-    return res
-      .status(400)
-      .json({ message: error?.message || "สมัครไม่สำเร็จ" });
-  }
-
   res.status(201).json({
     message: "สมัครสมาชิกสำเร็จ",
     data: {
       user: {
-        id: data.user.id,
-        email: data.user.email,
-        username: data.user.user_metadata?.username,
+        id: data?.user?.id,
+        email: data?.user?.email,
+        username: data?.user?.user_metadata?.username,
       },
     },
   });
