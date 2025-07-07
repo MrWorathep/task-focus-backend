@@ -10,6 +10,4 @@ app.use(express.json());
 
 app.use("/taskfocus/auth", authRoutes);
 
-app.listen(env.PORT, () => {
-  console.log("🚀 API Start: http://localhost:" + env.PORT);
-});
+export default app;
