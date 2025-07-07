@@ -35,6 +35,9 @@ export async function register(req: Request, res: Response) {
         email: data.user.email,
         username: data.user.user_metadata?.username,
       },
+      session: {
+        access_token: data.session?.access_token,
+      },
     },
   });
 }
