@@ -38,6 +38,10 @@ export async function register(req: Request, res: Response) {
         break;
     }
 
+    const errorThrow: Error & { details: string } = new Error("สมัครไม่สำเร็จ");
+    errorThrow.details = errorMessage;
+    throw errorThrow;
+
     return res.status(400).json({
       message: "ไม่สามารถสมัครสมาชิกได้",
       details: errorMessage,
