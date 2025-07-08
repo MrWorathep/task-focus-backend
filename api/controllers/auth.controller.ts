@@ -37,11 +37,6 @@ export async function register(req: Request, res: Response) {
         errorMessage = "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร";
         break;
     }
-
-    const errorThrow: Error & { details: string } = new Error("สมัครไม่สำเร็จ");
-    errorThrow.details = errorMessage;
-    throw errorThrow;
-
     return res.status(400).json({
       message: "ไม่สามารถสมัครสมาชิกได้",
       details: errorMessage,
