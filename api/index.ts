@@ -9,8 +9,6 @@ app.use(express.json());
 
 app.use("/taskfocus/auth", authRoutes);
 
-app.listen(4000, () => console.log("Listening on port 4000"));
-
 export default (req: VercelRequest, res: VercelResponse) => {
   app(req, res);
 };
